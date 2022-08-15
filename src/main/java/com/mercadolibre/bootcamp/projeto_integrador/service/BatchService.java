@@ -13,15 +13,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
 public class BatchService implements IBatchService {
     private final int minimumExpirationDays = 20;
+    private final List<String> STATES = new ArrayList<>(Arrays.asList("AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO",
+            "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN",
+            "RS", "RO", "RR", "SC", "SP", "SE", "TO"));
     @Autowired
     private IBatchRepository batchRepository;
     @Autowired
@@ -251,6 +252,14 @@ public class BatchService implements IBatchService {
                 .filter(batch -> batch.getCurrentQuantity() > 0)
                 .map(BatchDueDateResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Batch> findByLocationAndDueDate(String state, String city, LocalDate maxDueDate) {
+        if (!STATES.contains(state.toUpperCase())) {
+            throw new BadRequestException("Estado inválido.");
+        }
+        return batchRepository.findAllByInboundOrder_Section_Warehouse_StateEqualsAndInboundOrder_Section_Warehouse_CityEqualsAndDueDateBefore(state, city, maxDueDate);
     }
 
     /**

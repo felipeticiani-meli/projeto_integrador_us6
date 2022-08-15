@@ -15,4 +15,11 @@ public class Warehouse {
 
     @Column(length = 50)
     private String location;
+
+    @Column
+    private String city;
+    @Column
+    private String district;
+    @Column(length = 2)
+    private String state;
 }

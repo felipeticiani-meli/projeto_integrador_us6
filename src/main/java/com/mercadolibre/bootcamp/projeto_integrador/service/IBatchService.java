@@ -6,6 +6,7 @@ import com.mercadolibre.bootcamp.projeto_integrador.dto.BatchRequestDto;
 import com.mercadolibre.bootcamp.projeto_integrador.model.Batch;
 import com.mercadolibre.bootcamp.projeto_integrador.model.InboundOrder;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface IBatchService {
@@ -23,4 +24,12 @@ public interface IBatchService {
     List<BatchDueDateResponseDto> findBatchBySection(long sectionCode, int numberOfDays, long managerId);
 
     List<BatchDueDateResponseDto> findBatchByCategoryAndDueDate(String categoryCode, int numberOfDays, String orderDir, long managerId);
+
+    /**
+     * @param state Estado do armazém
+     * @param city Cidade do armazém
+     * @param maxDueDate Data máxima de expiração
+     * @return Lista de Batch filtrados
+     */
+    List<Batch> findByLocationAndDueDate(String state, String city, LocalDate maxDueDate);
 }
