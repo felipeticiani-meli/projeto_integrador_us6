@@ -7,7 +7,7 @@ API REST desenvolvida pelo grupo Beta Campers para o Projeto Integrador feito du
 - Documentos
   - [User Story](User%20story.pdf)
   - <a href="">Diagrama UML </a>
-  - [DER]()
+  - [DER](DER.png)
   - [Swagger]()
   - [Postman collection]()
   - [Swagger]()
