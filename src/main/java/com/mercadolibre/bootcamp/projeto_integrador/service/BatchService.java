@@ -259,7 +259,7 @@ public class BatchService implements IBatchService {
         if (!STATES.contains(state.toUpperCase())) {
             throw new BadRequestException("Estado inválido.");
         }
-        return batchRepository.findAllByInboundOrder_Section_Warehouse_StateEqualsAndInboundOrder_Section_Warehouse_CityEqualsAndDueDateBefore(state, city, maxDueDate);
+        return batchRepository.findAllByCurrentQuantityGreaterThanAndInboundOrder_Section_Warehouse_StateEqualsAndInboundOrder_Section_Warehouse_CityEqualsAndDueDateBefore(0, state, city, maxDueDate);
     }
 
     /**

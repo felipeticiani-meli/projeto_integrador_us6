@@ -28,5 +28,5 @@ public interface IBatchRepository extends JpaRepository<Batch, Long> {
 
     Optional<Batch> findOneByBatchNumberAndCurrentQuantityGreaterThanEqualAndDueDateAfterOrderByDueDate(long batchNumber, int minimumQuantity, LocalDate minimumExpirationDate);
 
-    List<Batch> findAllByInboundOrder_Section_Warehouse_StateEqualsAndInboundOrder_Section_Warehouse_CityEqualsAndDueDateBefore(String state, String city, LocalDate maxDueDate);
+    List<Batch> findAllByCurrentQuantityGreaterThanAndInboundOrder_Section_Warehouse_StateEqualsAndInboundOrder_Section_Warehouse_CityEqualsAndDueDateBefore(int minQuantity, String state, String city, LocalDate maxDueDate);
 }
