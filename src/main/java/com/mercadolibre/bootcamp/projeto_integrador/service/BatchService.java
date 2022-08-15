@@ -262,6 +262,23 @@ public class BatchService implements IBatchService {
         return batchRepository.findAllByCurrentQuantityGreaterThanAndInboundOrder_Section_Warehouse_StateEqualsAndInboundOrder_Section_Warehouse_CityEqualsAndDueDateBefore(0, state, city, maxDueDate);
     }
 
+    @Override
+    public Batch findById(long batchNumber) {
+        Optional<Batch> batch = batchRepository.findById(batchNumber);
+        if (batch.isEmpty())
+            throw new NotFoundException("Batch");
+        return batch.get();
+    }
+
+    @Override
+    public void updateCurrentQuantity(long batchNumber, int reducedQuantity) {
+        Batch batch = findById(batchNumber);
+        if (reducedQuantity > batch.getCurrentQuantity())
+            throw new BatchOutOfStockException(batchNumber);
+        batch.setCurrentQuantity(batch.getCurrentQuantity() - reducedQuantity);
+        batchRepository.save(batch);
+    }
+
     /**
      * Método converte a lista de Batch para uma lista de BatchBuyerResponseDto.
      *

@@ -32,4 +32,6 @@ public interface IBatchService {
      * @return Lista de Batch filtrados
      */
     List<Batch> findByLocationAndDueDate(String state, String city, LocalDate maxDueDate);
+    Batch findById(long batchNumber);
+    void updateCurrentQuantity(long batchNumber, int reducedQuantity);
 }
