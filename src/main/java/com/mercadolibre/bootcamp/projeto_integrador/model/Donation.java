@@ -1,6 +1,7 @@
 package com.mercadolibre.bootcamp.projeto_integrador.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import java.util.UUID;
 @Entity
 @Getter @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Donation {
     @Id
     @Type(type = "uuid-char")
@@ -33,12 +35,4 @@ public class Donation {
     @JoinColumn(name = "batchNumber")
     @JsonIgnore
     private Batch batch;
-
-    public Donation(UUID id, int quantity, LocalDate date, Foundation foundation, Batch batch) {
-        this.donationId = id;
-        this.quantity = quantity;
-        this.date = date;
-        this.foundation = foundation;
-        this.batch = batch;
-    }
 }
