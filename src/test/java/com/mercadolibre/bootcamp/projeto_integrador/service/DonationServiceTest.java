@@ -1,6 +1,8 @@
 package com.mercadolibre.bootcamp.projeto_integrador.service;
 
 import com.mercadolibre.bootcamp.projeto_integrador.dto.BatchFoundationResponseDto;
+import com.mercadolibre.bootcamp.projeto_integrador.exceptions.BadRequestException;
+import com.mercadolibre.bootcamp.projeto_integrador.exceptions.BatchOutOfStockException;
 import com.mercadolibre.bootcamp.projeto_integrador.exceptions.NotFoundException;
 import com.mercadolibre.bootcamp.projeto_integrador.model.*;
 import com.mercadolibre.bootcamp.projeto_integrador.repository.IDonationRepository;
@@ -13,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
@@ -50,7 +53,76 @@ class DonationServiceTest {
     }
 
     @Test
-    void create() {
+    void create_returnDonation_whenValidRequest() {
+        // Arrange
+        batches.remove(0);
+        when(foundationRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(foundation));
+        when(batchService.findById(ArgumentMatchers.anyLong())).thenReturn(batches.get(0));
+
+        doNothing().when(batchService).updateCurrentQuantity(ArgumentMatchers.anyLong(), ArgumentMatchers.anyInt());
+        when(donationRepository.save(ArgumentMatchers.any())).thenReturn(null);
+
+        // Act
+        Donation returnedDonation = service.create(batches.get(0).getBatchNumber(), foundation.getFoundationId());
+
+        // Assert
+        assertThat(returnedDonation).isNotNull();
+        assertEquals(returnedDonation.getDonationId().toString().length(), 36);
+        assertEquals(returnedDonation.getQuantity(), batches.get(0).getCurrentQuantity());
+        assertEquals(returnedDonation.getDate(), LocalDate.now());
+        assertEquals(returnedDonation.getBatch().getBatchNumber(), batches.get(0).getBatchNumber());
+    }
+
+    @Test
+    void create_returnNotFoundException_whenInvalidFoundation() {
+        // Arrange
+        when(foundationRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.empty());
+
+        // Act
+        NotFoundException exception = assertThrows(NotFoundException.class,
+                () -> service.create(batches.get(0).getBatchNumber() , foundation.getFoundationId()));
+
+        // Assert
+        assertThat(exception.getName()).contains("Foundation not found");
+        assertThat(exception.getMessage()).contains("There is no foundation with the specified id");
+        verify(batchService, never()).findByLocationAndDueDate(ArgumentMatchers.anyString(),
+                ArgumentMatchers.anyString(), ArgumentMatchers.any());
+    }
+
+    @Test
+    void create_returnBatchOutOfStockException_whenCurrentQuantityIsZero() {
+        // Arrange
+        when(foundationRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(foundation));
+        batches.get(0).setCurrentQuantity(0);
+        when(batchService.findById(ArgumentMatchers.anyLong())).thenReturn(batches.get(0));
+
+        // Act
+        BatchOutOfStockException exception = assertThrows(BatchOutOfStockException.class,
+                () -> service.create(batches.get(0).getBatchNumber() , foundation.getFoundationId()));
+
+        // Assert
+        assertThat(exception.getMessage()).contains(String.valueOf(batches.get(0).getBatchNumber()));
+        assertThat(exception.getMessage()).contains("is out of stock");
+        verify(batchService, never()).updateCurrentQuantity(ArgumentMatchers.anyLong(), ArgumentMatchers.anyInt());
+        verify(donationRepository, never()).save(ArgumentMatchers.any());
+    }
+
+    @Test
+    void create_returnBadRequestException_whenInvalidDueDate() {
+        // Arrange
+        when(foundationRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(foundation));
+        batches.get(0).setDueDate(LocalDate.now().plusWeeks(4));
+        when(batchService.findById(ArgumentMatchers.anyLong())).thenReturn(batches.get(0));
+
+        // Act
+        BadRequestException exception = assertThrows(BadRequestException.class,
+                () -> service.create(batches.get(0).getBatchNumber() , foundation.getFoundationId()));
+
+        // Assert
+        assertThat(exception.getName()).contains("Bad request");
+        assertThat(exception.getMessage()).contains("Produto indisponível para doação.");
+        verify(batchService, never()).updateCurrentQuantity(ArgumentMatchers.anyLong(), ArgumentMatchers.anyInt());
+        verify(donationRepository, never()).save(ArgumentMatchers.any());
     }
 
     @Test
