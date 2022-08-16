@@ -1,0 +1,120 @@
+openapi: 3.0.3
+info:
+  title: Projeto Integrador - US6
+  description: |-
+    API REST desenvolvida pelo grupo Beta Campers para o Projeto Integrador feito durante o IT Bootcamp Backend Java (wave 6).
+
+    O requisito individual acrescenta funcionalidades para que instituições sociais (como as que abrigam pessoas em vulnerabilidade) possam consultar produtos disponíveis para doação e realizar a reserva destes para retirada em um centro de distribuição.
+    
+    - [Repositório no GitHub](https://github.com/felipeticiani-meli/projeto_integrador_us6)
+  version: 0.6.0
+servers:
+  - url: localhost:8080/api/v1
+tags:
+  - name: foundations
+    description: Consulta e reserva de produtos disponíveis para doação
+paths:
+  /foundations:
+    get:
+      tags:
+        - foundations
+      summary: Exibe os produtos disponíveis para doação na cidade pesquisada.
+      parameters:
+      - name: state
+        in: query
+        schema:
+          type: string
+          example: SP
+        description: Estado do centro de distruibuição.
+        required: true
+      - name: city
+        in: query
+        schema:
+          type: string
+          example: Cajamar
+        description: Cidade do centro de distruibuição.
+        required: true
+      - name: Foundation-Id
+        in: header
+        schema:
+          type: integer
+          example: 1
+        description: ID da instituição.
+        required: true
+      responses:
+        '200':
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  district:
+                    type: string
+                    example: Centro
+                  address:
+                    type: string
+                    example: Rua XYZ, 45
+                  batches:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        batchNumber:
+                          type: integer
+                          example: 2
+                        productName:
+                          type: string
+                          example: Queijo
+                        brand:
+                          type: string
+                          example: Sadia
+                        category:
+                          type: string
+                          example: CHILLED
+                        quantity:
+                          type: integer
+                          example: 58
+                        dueDate:
+                          type: string
+                          example: 2022-10-12
+  /foundations{batchNumber}:
+    post:
+      tags:
+        - foundations
+      summary: Realiza a reserva de um produto para retirada no centro de distribuição.
+      parameters:
+      - name: batchNumber
+        in: path
+        schema:
+          type: string
+          example: 2
+        description: Lote de produtos para ser reservado.
+        required: true
+      - name: Foundation-Id
+        in: header
+        schema:
+          type: integer
+          example: 1
+        description: ID da instituição.
+        required: true
+      responses:
+        '201':
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  donationId:
+                    type: string
+                    example: 010a6db6-a043-4b5d-adef-d974f9df2630
+                  quantity:
+                    type: integer
+                    example: 109
+                  date:
+                          type: string
+                          example: 2022-08-15
+                  
+                    
+                
