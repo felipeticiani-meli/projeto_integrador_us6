@@ -11,6 +11,7 @@ public class WarehouseGenerator {
         Warehouse warehouse = new Warehouse();
         warehouse.setWarehouseCode(1);
         warehouse.setLocation("Rua XYZ");
+        warehouse.setDistrict("Centro");
         warehouse.setCity("Cajamar");
         warehouse.setState("SP");
         return warehouse;

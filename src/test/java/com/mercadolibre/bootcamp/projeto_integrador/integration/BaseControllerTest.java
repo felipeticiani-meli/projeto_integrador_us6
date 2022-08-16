@@ -35,6 +35,8 @@ public class BaseControllerTest {
     protected IBatchRepository batchRepository;
     @Autowired
     protected IInboundOrderRepository inboundOrderRepository;
+    @Autowired
+    protected IFoundationRepository foundationRepository;
 
     public BaseControllerTest() {
         objectMapper = new ObjectMapper();
@@ -163,5 +165,11 @@ public class BaseControllerTest {
         requestDto.setBatchStock(batchRequest);
         requestDto.setSectionCode(section.getSectionCode());
         return requestDto;
+    }
+
+    protected Foundation getSavedFoundation() {
+        Foundation foundation = FoundationGenerator.newFoundation();
+        foundationRepository.save(foundation);
+        return foundation;
     }
 }
