@@ -8,7 +8,8 @@ API REST desenvolvida pelo grupo Beta Campers para o Projeto Integrador feito du
   - [User Story](User%20story.pdf)
   - <a href="https://app.diagrams.net/#G1Gj9U0cSE4nMpaeo89gFOF42RJTsVXzGC">Diagrama UML </a>
   - [DER](DER.png)
-  - [Swagger]()
+  - [Swagger JSON](openapi.json)
+  - [Swagger YAML](openapi.yaml)
   - [Postman collection](Projeto%20integrador.postman_collection.json)
 - [Funcionalidades](#funcionalidades)
   - [GET - Exibe os produtos disponíveis para doação](#get)
