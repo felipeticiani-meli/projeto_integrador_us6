@@ -10,13 +10,17 @@ public class WarehouseGenerator {
     public static Warehouse newWarehouse() {
         Warehouse warehouse = new Warehouse();
         warehouse.setWarehouseCode(1);
-        warehouse.setLocation("New York");
+        warehouse.setLocation("Rua XYZ");
+        warehouse.setCity("Cajamar");
+        warehouse.setState("SP");
         return warehouse;
     }
 
     public static Warehouse newWarehouseWithoutCode() {
         Warehouse warehouse = new Warehouse();
-        warehouse.setLocation("New York");
+        warehouse.setLocation("Rua XYZ");
+        warehouse.setCity("Cajamar");
+        warehouse.setState("SP");
         return warehouse;
     }
 

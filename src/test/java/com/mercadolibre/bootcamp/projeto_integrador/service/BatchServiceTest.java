@@ -397,4 +397,44 @@ class BatchServiceTest {
         verify(batchRepository, never()).findByProduct_CategoryAndDueDateBetweenOrderByDueDateAsc(ArgumentMatchers.any(),
                 ArgumentMatchers.any(), ArgumentMatchers.any());
     }
+
+    @Test
+    void findByLocationAndDueDate_returnBatches_whenValidParameters() {
+        // Arrange
+        when(batchRepository.findAllByCurrentQuantityGreaterThanAndInboundOrder_Section_Warehouse_StateEqualsAndInboundOrder_Section_Warehouse_CityEqualsAndDueDateBefore(
+                ArgumentMatchers.anyInt(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.any()))
+                .thenReturn(batches);
+        // Act
+        List<Batch> returnedBatches = service.findByLocationAndDueDate(section.getWarehouse().getState(),
+                section.getWarehouse().getCity(), LocalDate.now().plusDays(21));
+
+        // Assert
+        assertThat(returnedBatches).isNotEmpty();
+        assertEquals(batches.size(), returnedBatches.size());
+        assertEquals(batches.get(0).getBatchNumber(), returnedBatches.get(0).getBatchNumber());
+        assertEquals(batches.get(1).getBatchNumber(), returnedBatches.get(1).getBatchNumber());
+    }
+
+    @Test
+    void findByLocationAndDueDate_returnBadRequestException_whenInvalidState() {
+        // Act
+        BadRequestException exception = assertThrows(BadRequestException.class,
+                () -> service.findByLocationAndDueDate("SJ", section.getWarehouse().getCity(),
+                        LocalDate.now().plusDays(21)));
+
+        // Assert
+        assertThat(exception.getName()).contains("Bad request");
+        assertThat(exception.getMessage()).contains("Estado inválido");
+        verify(batchRepository, never()).findAllByCurrentQuantityGreaterThanAndInboundOrder_Section_Warehouse_StateEqualsAndInboundOrder_Section_Warehouse_CityEqualsAndDueDateBefore(
+                ArgumentMatchers.anyInt(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.any());
+    }
+
+    @Test
+    void findById() {
+    }
+
+    @Test
+    void updateCurrentQuantity() {
+    }
+
 }
