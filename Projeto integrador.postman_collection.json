@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "e1e9a288-8268-4010-b569-4b8be51f16e7",
+		"_postman_id": "8660f131-1699-4013-8598-850bee205f41",
 		"name": "Projeto integrador",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "22711155"
@@ -13,7 +13,137 @@
 					"name": "US6",
 					"item": [
 						{
-							"name": "Get products with invalid state",
+							"name": "Get available products",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const postRequest = {",
+											"  url: 'localhost:8080/api/v1/fresh-products/inboundorder',",
+											"  method: 'POST',",
+											"  header: {",
+											"    'Content-Type': 'application/json',",
+											"    'Manager-Id': '1'",
+											"  },",
+											"  body: {",
+											"    mode: 'raw',",
+											"    raw: JSON.stringify({",
+											"    \"sectionCode\": 3,",
+											"    \"batchStock\": [",
+											"        {",
+											"            \"productId\": 1,",
+											"            \"currentTemperature\": 18.7,",
+											"            \"minimumTemperature\": 10.0,",
+											"            \"initialQuantity\": 150,",
+											"            \"manufacturingDate\": \"25-07-2022\",",
+											"            \"manufacturingTime\": \"25-07-2022 14:23:54\",",
+											"            \"dueDate\": \"25-08-2022\",",
+											"            \"productPrice\": 10.99",
+											"        }",
+											"    ]",
+											"})",
+											"  }",
+											"};",
+											"pm.sendRequest(postRequest, (error, response) => {",
+											"  console.log(error ? error : response.json());",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Foundation-Id",
+										"value": "1",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base}}/foundations?state=SP&city=Cajamar",
+									"host": [
+										"{{base}}"
+									],
+									"path": [
+										"foundations"
+									],
+									"query": [
+										{
+											"key": "state",
+											"value": "SP"
+										},
+										{
+											"key": "city",
+											"value": "Cajamar"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create new donation",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const postRequest = {",
+											"  url: 'localhost:8080/api/v1/fresh-products/inboundorder',",
+											"  method: 'POST',",
+											"  header: {",
+											"    'Content-Type': 'application/json',",
+											"    'Manager-Id': '1'",
+											"  },",
+											"  body: {",
+											"    mode: 'raw',",
+											"    raw: JSON.stringify({",
+											"    \"sectionCode\": 3,",
+											"    \"batchStock\": [",
+											"        {",
+											"            \"productId\": 1,",
+											"            \"currentTemperature\": 18.7,",
+											"            \"minimumTemperature\": 10.0,",
+											"            \"initialQuantity\": 150,",
+											"            \"manufacturingDate\": \"25-07-2022\",",
+											"            \"manufacturingTime\": \"25-07-2022 14:23:54\",",
+											"            \"dueDate\": \"25-08-2022\",",
+											"            \"productPrice\": 10.99",
+											"        }",
+											"    ]",
+											"})",
+											"  }",
+											"};",
+											"pm.sendRequest(postRequest, (error, response) => {",
+											"    pm.environment.set('donationBatch', response.json().batchStock[0].batchNumber);",
+											"  console.log(error ? error : response.json());",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [
@@ -24,7 +154,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{base}}/foundations?batchNumber=7",
+									"raw": "{{base}}/foundations?batchNumber={{donationBatch}}",
 									"host": [
 										"{{base}}"
 									],
@@ -34,7 +164,7 @@
 									"query": [
 										{
 											"key": "batchNumber",
-											"value": "7"
+											"value": "{{donationBatch}}"
 										}
 									]
 								}
@@ -524,6 +654,240 @@
 										{
 											"key": "city",
 											"value": "Cajamar"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create new donation with invalid dueDate",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const postRequest = {",
+											"  url: 'localhost:8080/api/v1/fresh-products/inboundorder',",
+											"  method: 'POST',",
+											"  header: {",
+											"    'Content-Type': 'application/json',",
+											"    'Manager-Id': '1'",
+											"  },",
+											"  body: {",
+											"    mode: 'raw',",
+											"    raw: JSON.stringify({",
+											"    \"sectionCode\": 3,",
+											"    \"batchStock\": [",
+											"        {",
+											"            \"productId\": 1,",
+											"            \"currentTemperature\": 18.7,",
+											"            \"minimumTemperature\": 10.0,",
+											"            \"initialQuantity\": 150,",
+											"            \"manufacturingDate\": \"25-07-2022\",",
+											"            \"manufacturingTime\": \"25-07-2022 14:23:54\",",
+											"            \"dueDate\": \"25-08-2023\",",
+											"            \"productPrice\": 10.99",
+											"        }",
+											"    ]",
+											"})",
+											"  }",
+											"};",
+											"pm.sendRequest(postRequest, (error, response) => {",
+											"    pm.environment.set('donationBatch', response.json().batchStock[0].batchNumber);",
+											"  console.log(error ? error : response.json());",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Foundation-Id",
+										"value": "1",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base}}/foundations?batchNumber={{donationBatch}}",
+									"host": [
+										"{{base}}"
+									],
+									"path": [
+										"foundations"
+									],
+									"query": [
+										{
+											"key": "batchNumber",
+											"value": "{{donationBatch}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create new donation with invalid quantity",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const postRequest = {",
+											"  url: 'localhost:8080/api/v1/fresh-products/inboundorder',",
+											"  method: 'POST',",
+											"  header: {",
+											"    'Content-Type': 'application/json',",
+											"    'Manager-Id': '1'",
+											"  },",
+											"  body: {",
+											"    mode: 'raw',",
+											"    raw: JSON.stringify({",
+											"    \"sectionCode\": 3,",
+											"    \"batchStock\": [",
+											"        {",
+											"            \"productId\": 1,",
+											"            \"currentTemperature\": 18.7,",
+											"            \"minimumTemperature\": 10.0,",
+											"            \"initialQuantity\": 0,",
+											"            \"manufacturingDate\": \"25-07-2022\",",
+											"            \"manufacturingTime\": \"25-07-2022 14:23:54\",",
+											"            \"dueDate\": \"25-08-2023\",",
+											"            \"productPrice\": 10.99",
+											"        }",
+											"    ]",
+											"})",
+											"  }",
+											"};",
+											"pm.sendRequest(postRequest, (error, response) => {",
+											"    pm.environment.set('donationBatch', response.json().batchStock[0].batchNumber);",
+											"  console.log(error ? error : response.json());",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Foundation-Id",
+										"value": "1",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base}}/foundations?batchNumber={{donationBatch}}",
+									"host": [
+										"{{base}}"
+									],
+									"path": [
+										"foundations"
+									],
+									"query": [
+										{
+											"key": "batchNumber",
+											"value": "{{donationBatch}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create new donation with invalid foundation",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const postRequest = {",
+											"  url: 'localhost:8080/api/v1/fresh-products/inboundorder',",
+											"  method: 'POST',",
+											"  header: {",
+											"    'Content-Type': 'application/json',",
+											"    'Manager-Id': '1'",
+											"  },",
+											"  body: {",
+											"    mode: 'raw',",
+											"    raw: JSON.stringify({",
+											"    \"sectionCode\": 3,",
+											"    \"batchStock\": [",
+											"        {",
+											"            \"productId\": 1,",
+											"            \"currentTemperature\": 18.7,",
+											"            \"minimumTemperature\": 10.0,",
+											"            \"initialQuantity\": 0,",
+											"            \"manufacturingDate\": \"25-07-2022\",",
+											"            \"manufacturingTime\": \"25-07-2022 14:23:54\",",
+											"            \"dueDate\": \"25-08-2023\",",
+											"            \"productPrice\": 10.99",
+											"        }",
+											"    ]",
+											"})",
+											"  }",
+											"};",
+											"pm.sendRequest(postRequest, (error, response) => {",
+											"    pm.environment.set('donationBatch', response.json().batchStock[0].batchNumber);",
+											"  console.log(error ? error : response.json());",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Foundation-Id",
+										"value": "99",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base}}/foundations?batchNumber={{donationBatch}}",
+									"host": [
+										"{{base}}"
+									],
+									"path": [
+										"foundations"
+									],
+									"query": [
+										{
+											"key": "batchNumber",
+											"value": "{{donationBatch}}"
 										}
 									]
 								}
@@ -1310,6 +1674,10 @@
 		{
 			"key": "base",
 			"value": "http://localhost:8080/api/v1"
+		},
+		{
+			"key": "donationBatch",
+			"value": "0"
 		}
 	]
 }
