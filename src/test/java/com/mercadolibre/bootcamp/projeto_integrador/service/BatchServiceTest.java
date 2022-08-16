@@ -22,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -430,7 +431,28 @@ class BatchServiceTest {
     }
 
     @Test
-    void findById() {
+    void findById_returnBatch_whenBatchExist() {
+        // Arrange
+        when(batchRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(batches.get(0)));
+        // Act
+        Batch returnedBatch = service.findById(batches.get(0).getBatchNumber());
+
+        // Assert
+        assertThat(returnedBatch).isNotNull();
+        assertEquals(batches.get(0).getBatchNumber(), returnedBatch.getBatchNumber());
+    }
+
+    @Test
+    void findById_returnNotFoundException_whenBatchNotExist() {
+        // Arrange
+        when(batchRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.empty());
+        // Act
+        NotFoundException exception = assertThrows(NotFoundException.class,
+                () -> service.findById(batches.get(0).getBatchNumber()));
+
+        // Assert
+        assertThat(exception.getName()).contains("Batch not found");
+        assertThat(exception.getMessage()).contains("There is no batch with the specified id");
     }
 
     @Test
