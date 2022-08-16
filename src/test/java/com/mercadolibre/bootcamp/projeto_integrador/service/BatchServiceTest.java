@@ -2,10 +2,7 @@ package com.mercadolibre.bootcamp.projeto_integrador.service;
 
 import com.mercadolibre.bootcamp.projeto_integrador.dto.BatchBuyerResponseDto;
 import com.mercadolibre.bootcamp.projeto_integrador.dto.BatchDueDateResponseDto;
-import com.mercadolibre.bootcamp.projeto_integrador.exceptions.BadRequestException;
-import com.mercadolibre.bootcamp.projeto_integrador.exceptions.ManagerNotFoundException;
-import com.mercadolibre.bootcamp.projeto_integrador.exceptions.NotFoundException;
-import com.mercadolibre.bootcamp.projeto_integrador.exceptions.UnauthorizedManagerException;
+import com.mercadolibre.bootcamp.projeto_integrador.exceptions.*;
 import com.mercadolibre.bootcamp.projeto_integrador.model.Batch;
 import com.mercadolibre.bootcamp.projeto_integrador.model.Manager;
 import com.mercadolibre.bootcamp.projeto_integrador.model.Section;
@@ -25,8 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -456,7 +452,30 @@ class BatchServiceTest {
     }
 
     @Test
-    void updateCurrentQuantity() {
+    void updateCurrentQuantity_returnNothing_whenValidBatch() {
+        // Arrange
+        when(batchRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(batches.get(0)));
+        when(batchRepository.save(ArgumentMatchers.any())).thenReturn(batches.get(0));
+
+        // Act & Assert
+        assertDoesNotThrow(() -> service.updateCurrentQuantity(batches.get(0).getBatchNumber(), batches.get(0).getCurrentQuantity()));
+        verify(batchRepository, atLeastOnce()).save(ArgumentMatchers.any());
+    }
+
+    @Test
+    void updateCurrentQuantity_returnException_whenInvalidQuantity() {
+        // Arrange
+        when(batchRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(batches.get(0)));
+
+        // Act
+        BatchOutOfStockException exception = assertThrows(BatchOutOfStockException.class,
+                () -> service.updateCurrentQuantity(batches.get(0).getBatchNumber(), batches.get(0).getCurrentQuantity() + 1));
+
+        // Assert
+        assertThat(exception.getName()).contains("Batch");
+        assertThat(exception.getMessage()).contains(String.valueOf(batches.get(0).getBatchNumber()));
+        assertThat(exception.getMessage()).contains("is out of stock");
+        verify(batchRepository, never()).save(ArgumentMatchers.any());
     }
 
 }
