@@ -823,36 +823,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"const postRequest = {",
-											"  url: 'localhost:8080/api/v1/fresh-products/inboundorder',",
-											"  method: 'POST',",
-											"  header: {",
-											"    'Content-Type': 'application/json',",
-											"    'Manager-Id': '1'",
-											"  },",
-											"  body: {",
-											"    mode: 'raw',",
-											"    raw: JSON.stringify({",
-											"    \"sectionCode\": 3,",
-											"    \"batchStock\": [",
-											"        {",
-											"            \"productId\": 1,",
-											"            \"currentTemperature\": 18.7,",
-											"            \"minimumTemperature\": 10.0,",
-											"            \"initialQuantity\": 0,",
-											"            \"manufacturingDate\": \"25-07-2022\",",
-											"            \"manufacturingTime\": \"25-07-2022 14:23:54\",",
-											"            \"dueDate\": \"25-08-2023\",",
-											"            \"productPrice\": 10.99",
-											"        }",
-											"    ]",
-											"})",
-											"  }",
-											"};",
-											"pm.sendRequest(postRequest, (error, response) => {",
-											"    pm.environment.set('donationBatch', response.json().batchStock[0].batchNumber);",
-											"  console.log(error ? error : response.json());",
-											"});"
+											""
 										],
 										"type": "text/javascript"
 									}

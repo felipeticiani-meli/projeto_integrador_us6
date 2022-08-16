@@ -1,6 +1,6 @@
-insert into warehouse values (null, 'Cajamar');
-insert into warehouse values (null, 'Qatar');
-insert into warehouse values (null, 'Uberlândia');
+insert into warehouse values (null, 'Cajamar', 'Centro', 'Rua XYZ, 45', 'SP');
+insert into warehouse values (null, 'Biguaçu', 'Centro', 'Rodovia BR 101, km207', 'SC');
+insert into warehouse values (null, 'São José', 'Forquilinhas', 'Rua de forquilinhas, 107', 'SC');
 
 insert into manager values (null, 'pedro@example.com', 'Pedro', 'Thome');
 insert into manager values (null, 'thiago@example.com', 'Thiago', 'Sordi');
@@ -11,11 +11,11 @@ insert into manager values (null, 'viviane@example.com', 'Viviane', 'de Freitas'
 
 insert into section values (null, 'FROZEN', 0, 10, 1, 1);
 insert into section values (null, 'FRESH', 0, 10, 1, 1);
-insert into section values (null, 'CHILLED', 0, 10, 1, 1);
+insert into section values (null, 'CHILLED', 0, 500, 1, 1);
 
-insert into section values (null, 'FROZEN', 0, 20, 2, 2);
-insert into section values (null, 'FRESH', 0, 5, 2, 2);
-insert into section values (null, 'CHILLED', 5, 10, 3, 2);
+insert into section values (null, 'FROZEN', 0, 1000, 2, 2);
+insert into section values (null, 'FRESH', 0, 900, 2, 2);
+insert into section values (null, 'CHILLED', 5, 500, 3, 2);
 
 insert into section values (null, 'FROZEN', 0, 10, 3, 3);
 insert into section values (null, 'FRESH', 0, 5, 4, 3);
@@ -60,3 +60,6 @@ insert into buyer values (null, 'carlos');
 insert into buyer values (null, 'roberto');
 insert into buyer values (null, 'jessica');
 insert into buyer values (null, 'emerson');
+
+INSERT INTO foundation (username) VALUES ("nurrevi_sj");
+INSERT INTO foundation (username) VALUES ("nurrevi_fln");n');
